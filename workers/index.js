@@ -1,10 +1,9 @@
-let fetchgithub = require('./tasks/fetchGithub');
+let fetchGithub = require('./tasks/fetchGithub');
 
 //* Default, Scheduler set to every minute.
 
 let CronJob = require('cron').CronJob;
-new CronJob('* * * * * *', fetchgithub()
-  , null, true, 'America/Los_Angeles');
+new CronJob('* * * * * ', fetchGithub, null, true, 'America/Los_Angeles');
 
 
 //̶ F̶e̶t̶c̶h̶ G̶i̶t̶h̶u̶b̶(̶X̶)̶

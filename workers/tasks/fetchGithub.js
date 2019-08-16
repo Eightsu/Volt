@@ -1,12 +1,14 @@
 
 let fetch = require("node-fetch");
 let redis = require("redis");
+const { promisify } = require('util');
+
+// First Instance of Redis TASKS**
 
 let client = redis.createClient();
-
-const { promisify } = require('util');
-// const getAsync = promisify(client.get).bind(client);
 const setAsync = promisify(client.set).bind(client);
+
+
 
 
 
@@ -34,16 +36,33 @@ async function fetchGithub() {
     pageNumber++;
 
   }
-  console.log("Job Done.");
+  console.log("Job Done."); // Done fetching
 
 
-  const finished = await setAsync("github", JSON.stringify(allJobs));
-  console.log(allJobs.length);
-  // for(i=0; i< allJobs.length; i++){
-  //   // console.log(allJobs[i].title);
-  // }
+  // Filter(s) here?
 
+  const junior = allJobs.filter(job => {
+    const jobTitle = job.title.toLowerCase(); // Get rid of variation
+
+    if
+      (jobTitle.includes("senior") ||
+      jobTitle.includes("sr.") ||
+      jobTitle.includes("manager") ||
+      jobTitle.includes("lead") ||
+      jobTitle.includes("architect")) {
+      return false;
+    }
+    return true;
+  });
+
+  console.log(`now we have ${junior.length} jobs.`)
+
+
+  // "github" is the key for redis data
+
+  const finished = await setAsync("github", JSON.stringify(junior)); // Set in Redis
   console.log({ finished });
+
 }
 
 // fetchGithub();
